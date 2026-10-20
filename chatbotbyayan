@@ -1,0 +1,147 @@
+import sys
+
+EXIT_WORDS = ("bye", "exit", "quit")
+
+
+def clean_input(user_input):
+    return user_input.strip().lower().rstrip("!.?")
+
+
+def get_response(user_input):
+    message = clean_input(user_input)
+
+    if message == "":
+        return "Please type something so I can reply."
+
+    elif message in (
+        "hello",
+        "hi",
+        "hey",
+        "hey cypher",
+        "hello cypher",
+        "hi cypher"
+    ):
+        return "Hi! How can I help you?"
+
+    elif message in (
+        "how are you",
+        "how are you doing",
+        "how are u",
+        "how r u",
+        "how's your day",
+        "hows your day"
+    ):
+        return "I'm doing well! Thanks for asking."
+
+    elif message in (
+        "what is your name",
+        "what's your name",
+        "whats your name",
+        "who are you",
+        "tell me your name"
+    ):
+        return "My name is Cypher."
+
+    elif message in (
+        "what do you do",
+        "what can you do",
+        "what are you",
+        "what is your purpose"
+    ):
+        return "I'm Cypher, a simple chatbot. I can chat with you and answer basic questions."
+
+    elif message in (
+        "thanks",
+        "thank you",
+        "thx",
+        "thanks cypher",
+        "thank you cypher"
+    ):
+        return "You're welcome!"
+
+    elif message in EXIT_WORDS:
+        return "Goodbye!"
+
+    elif message == "help":
+        return (
+            "You can say hello, ask how I am, ask my name, "
+            "ask what I can do, or say bye."
+        )
+
+    else:
+        return "Sorry, I don't understand that yet. Type 'help' to see what I can do."
+
+
+def chat():
+    print("Cypher: Hello! My name is Cypher.")
+    print("Cypher: Type 'bye' to exit.")
+
+    while True:
+        try:
+            user_input = input("You: ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nCypher: Goodbye!")
+            break
+
+        response = get_response(user_input)
+
+        print(f"Cypher: {response}")
+
+        if clean_input(user_input) in EXIT_WORDS:
+            break
+
+
+def run_tests():
+    tests = [
+        ("hello", "Hi! How can I help you?"),
+        ("hi", "Hi! How can I help you?"),
+        ("hey", "Hi! How can I help you?"),
+        ("hey cypher", "Hi! How can I help you?"),
+        ("hello cypher", "Hi! How can I help you?"),
+
+        ("how are you", "I'm doing well! Thanks for asking."),
+        ("how are you doing", "I'm doing well! Thanks for asking."),
+        ("how are u", "I'm doing well! Thanks for asking."),
+        ("how r u", "I'm doing well! Thanks for asking."),
+        ("how's your day", "I'm doing well! Thanks for asking."),
+
+        ("what is your name", "My name is Cypher."),
+        ("what's your name", "My name is Cypher."),
+        ("whats your name", "My name is Cypher."),
+        ("who are you", "My name is Cypher."),
+        ("tell me your name", "My name is Cypher."),
+
+        ("what do you do",
+         "I'm Cypher, a simple chatbot. I can chat with you and answer basic questions."),
+
+        ("what can you do",
+         "I'm Cypher, a simple chatbot. I can chat with you and answer basic questions."),
+
+        ("thanks", "You're welcome!"),
+        ("thank you", "You're welcome!"),
+        ("thx", "You're welcome!"),
+
+        ("bye", "Goodbye!"),
+        ("exit", "Goodbye!"),
+        ("quit", "Goodbye!"),
+
+        ("  HELLO!  ", "Hi! How can I help you?"),
+        ("How are you?", "I'm doing well! Thanks for asking."),
+        ("HELP",
+         "You can say hello, ask how I am, ask my name, ask what I can do, or say bye.")
+    ]
+
+    for text, expected in tests:
+        assert get_response(text) == expected, f"Failed for: {text!r}"
+
+    assert "type something" in get_response("   ")
+    assert "don't understand" in get_response("blah blah")
+
+    print("All tests passed!")
+
+
+if __name__ == "__main__":
+    if "--test" in sys.argv:
+        run_tests()
+    else:
+        chat()
